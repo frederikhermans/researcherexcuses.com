@@ -1,0 +1,73 @@
+<!DOCTYPE HTML>
+
+<html>
+    <head>
+        <title>Excuses for Academics</title>
+
+        <style type="text/css">
+            div {
+                text-align: center;
+            }
+
+            .content {
+                padding-top: 10%;
+            }
+
+            .footer {
+                position:   fixed;
+                bottom:     0px;
+                width:      100%;
+            }
+
+            @font-face {
+                font-family: 'Computer Modern Serif';
+                src: url('font/cmunrm.eot');
+                src: url('font/cmunrm.eot?#iefix') format('embedded-opentype'),
+                     url('font/cmunrm.woff') format('woff');
+                font-weight: normal;
+                font-style: normal;
+            }
+
+            #excuse {
+                font-size: 42pt;
+                text-decoration: none;
+                color: black;
+                font-family: 'Computer Modern Serif', Times;
+            }
+        </style>
+
+        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
+        <script type="text/javascript">
+            var excuses = ["It worked in simulation.",
+                           "One of our master students did the experiments.",
+                           "The reviewer did not understand our paper.",
+                           "Our paper was rejected on a technicality.",
+                           "I was busy working on another paper.",
+                           "The new PhD student wrote the manuscript.",
+                           "The initial results were promising.",
+                           "We didn't have time to run the experiment.",
+                           "We didn't have funding to run the experiment."]
+
+            var nextExcuse = function() {
+                var i = Math.floor(Math.random()*excuses.length);
+                $('#excuse').text(excuses[i]);
+            }
+
+            $(document).ready(function() {
+                nextExcuse();
+            });
+        </script>
+    </head>
+
+    <body>
+        <div class="content">
+            <a href="index.html" id="excuse">It worked in simulation.</a>
+        </div>
+
+        <div class="footer">
+            <p>
+                What's your excuse? <a href="mailto:submit@researcherexcuses.com">submit@researcherexcuses.com</a>
+            </p>
+        </div>
+    </body>
+</html>
