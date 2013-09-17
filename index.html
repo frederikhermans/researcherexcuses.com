@@ -4,19 +4,13 @@
     <head>
         <title>Excuses for Academics</title>
 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <link href="bootstrap.min.css" rel="stylesheet" media="screen">
+
         <style type="text/css">
-            div {
-                text-align: center;
-            }
-
-            .content {
-                padding-top: 10%;
-            }
-
-            .footer {
-                position:   fixed;
-                bottom:     0px;
-                width:      100%;
+            body {
+                padding-bottom: 70px;
             }
 
             @font-face {
@@ -33,10 +27,10 @@
                 text-decoration: none;
                 color: black;
                 font-family: 'Computer Modern Serif', Times;
+                line-height: 100%;
             }
         </style>
 
-        <script type="text/javascript" src="js/jquery-1.10.2.min.js"></script>
         <script type="text/javascript">
             var excuses = ["It worked in simulation.",
                            "One of our master students did the experiments.",
@@ -48,14 +42,49 @@
                            "We didn't have time to run the experiment.",
                            "We didn't have funding to run the experiment."]
 
-            var nextExcuse = function() {
-                var i = Math.floor(Math.random()*excuses.length);
-                $('#excuse').text(excuses[i]);
+            var permute = function(n) {
+                var a = Array(n);
+                for (var i=0;i<a.length;i++) {
+                    a[i] = i;
+                }
+                for (var i=0;i<a.length;i++) {
+                    var j = Math.floor(Math.random()*excuses.length);
+                    var tmp = a[i];
+                    a[i] = a[j];
+                    a[j] = tmp;
+                }
+                return a;
+            };
+
+            var readCookie = function(cookieName) {
+                var a = document.cookie.split(';');
+                for (var i=0;i<a.length;i++) {
+                    a[i] = a[i].replace(/^\s+/g, '');
+                    if (a[i].substring(0, cookieName.length) === cookieName) {
+                        return JSON.parse(unescape(a[i].split('=')[1]));
+                    }
+                }
+                return false;
             }
 
-            $(document).ready(function() {
-                nextExcuse();
-            });
+            var setCookie = function(cookieName, state) {
+                document.cookie = cookieName+'='+escape(JSON.stringify(state))+';path=/';
+            }
+
+            var nextExcuse = function() {
+                var state = readCookie('state');
+                if (!state || !state.a || state.a.length != excuses.length || state.pos < 0) {
+                    state = Object();
+                    state.a = permute(excuses.length);
+                    state.pos = 0;
+                    setCookie('state', state);
+                }
+
+                state.pos++;
+                document.getElementById('excuse').innerHTML = excuses[state.a[state.pos%excuses.length]];
+                console.log(state.pos, state.a[state.pos%excuses.length]);
+                setCookie('state', state);
+            }
         </script>
     </head>
 
@@ -70,14 +99,21 @@
           ga('send', 'pageview');
         </script>
 
-        <div class="content">
-            <a href="index.html" id="excuse">It worked in simulation.</a>
+        <div class="jumbotron" style="background-color: white">
+            <div class="container" style="text-align: center">
+                <a href="index.html" id="excuse">It worked in simulation.</a>
+            </div>
         </div>
 
-        <div class="footer">
-            <p>
+        <script type="text/javascript">
+            nextExcuse();
+        </script>
+
+        <nav class="navbar navbar-default navbar-fixed-bottom navbar-inverse" role="navigation">
+
+            <p class="navbar-text" style="width:100%; text-align: center">
                 What's your excuse? <a href="mailto:submit@researcherexcuses.com">submit@researcherexcuses.com</a>
             </p>
-        </div>
+        </nav>
     </body>
 </html>
